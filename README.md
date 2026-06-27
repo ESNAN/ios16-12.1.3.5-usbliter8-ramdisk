@@ -1,6 +1,6 @@
 # iPhone XR Ramdisk Boot / iPhone XR Ramdisk 启动工具
 
-脚本还不算完善，欢迎补充 payload、适配更多设备，或者提 PR 一起改。
+脚本还不算完善，欢迎提交 PR 补充 payload 或适配更多设备。如果这个项目对你有帮助，欢迎点个 Star。
 
 用于在 iPhone XR 上启动自定义 ramdisk，并通过 usbmux / SSH 进入 shell。
 
