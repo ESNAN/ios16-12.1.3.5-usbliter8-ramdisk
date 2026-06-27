@@ -2,7 +2,7 @@
 
 脚本还不算完善，欢迎提交 PR 补充 payload 或适配更多设备。如果这个项目对你有帮助，欢迎点个 Star。
 
-用于在 iPhone XR 上启动自定义 ramdisk，并通过 usbmux / SSH 进入 shell。
+在 iPhone XR 上启动自定义 ramdisk，并通过 usbmux / SSH 进入 shell。
 
 利用基础来自 [prdgmshift/usbliter8](https://github.com/prdgmshift/usbliter8)。`tools/usbliter8ctl` 用于从 pwned DFU 启动 `payload/iBSS.raw`，随后 `exploit.sh` 通过 `irecovery` 发送固件、DeviceTree、ramdisk、trustcache 和 kernelcache。
 
@@ -14,20 +14,16 @@
 - Board: `n841ap`
 - 启动流程 / Boot flow: pwned DFU -> iBSS -> Recovery -> ramdisk boot -> SSH
 
-替换 payload 时，请保持文件名一致，或同步修改 `exploit.sh`。
-
 ## 硬件要求 / Hardware Required
 
 - PR2350-A 开发板
-- PR2350-A 开发板 USB 连接线
-- iPhone XR USB 连接线
+- iPhone XR
+- USB 连接线
 - macOS 或 Linux 主机
 
-运行脚本前，先用 PR2350-A 配合 usbliter8 流程让设备进入 pwned DFU。
+运行脚本前，先用 PR2350-A 配合 usbliter8 让设备进入 pwned DFU。
 
 ## 软件依赖 / Software Required
-
-主机需要安装：
 
 - `python3`
 - Python 包：`pyusb`
@@ -35,7 +31,7 @@
 - `iproxy`
 - `idevice_id`
 - `sshpass`
-- OpenSSH 客户端：`ssh`
+- `ssh`
 
 macOS + Homebrew 可参考：
 
@@ -78,7 +74,7 @@ chmod +x exploit.sh ssh_connect.sh tools/usbliter8ctl
 ./exploit.sh
 ```
 
-脚本会自动完成：
+脚本流程：
 
 - 创建 `logs/`
 - 检查必需 payload 文件
@@ -97,13 +93,13 @@ chmod +x exploit.sh ssh_connect.sh tools/usbliter8ctl
 alpine
 ```
 
-设备启动后，可以随时用下面的脚本重连 SSH：
+启动后重连 SSH：
 
 ```bash
 ./ssh_connect.sh
 ```
 
-也可以手动连接：
+手动连接：
 
 ```bash
 iproxy 2222 22
@@ -112,7 +108,7 @@ ssh root@localhost -p 2222
 
 ## 环境变量覆盖 / Environment Overrides
 
-如果你的工具不在默认 PATH，或想指定自定义路径，可以使用环境变量：
+工具不在默认 PATH 时，可以用环境变量指定：
 
 ```bash
 IRECOVERY=/path/to/irecovery \
@@ -125,17 +121,17 @@ SSHPASS=/path/to/sshpass \
 
 ## 常见问题 / Troubleshooting
 
-如果 `usbliter8ctl` 提示设备不是 pwned 状态，请重新执行 PR2350-A pwned DFU 步骤。
+`usbliter8ctl` 提示设备不是 pwned 状态：重新执行 PR2350-A pwned DFU。
 
-如果脚本等待 Recovery 超时，请重新插拔 USB，并再次执行 pwned DFU 步骤。
+等待 Recovery 超时：重新插拔 USB，再执行 pwned DFU。
 
-如果 SSH 无法连接，等待几秒后运行：
+SSH 无法连接：等待几秒后运行：
 
 ```bash
 ./ssh_connect.sh
 ```
 
-如果本地 `2222` 端口被占用，可以停止旧的 `iproxy`：
+本地 `2222` 端口被占用：
 
 ```bash
 pkill -f 'iproxy .*2222.*22'
